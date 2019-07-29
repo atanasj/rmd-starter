@@ -23,19 +23,20 @@
 SRC = $(wildcard *.Rmd)
 
 ## Location of Pandoc support files.
-PREFIX = /Users/kjhealy/.pandoc
+PREFIX = /Users/atanas/.pandoc
 
 ## Location of your working bibliography file
-BIB = /Users/kjhealy/Documents/bibs/socbib-pandoc.bib
+BIB = /Users/atanas/.pandoc/MyLib.bib
 
 ## CSL stylesheet (located in the csl folder of the PREFIX directory).
-CSL = apsa
+CSL = apa-old-doi-prefix
 
 MD=$(SRC:.Rmd=.md)
 PDFS=$(SRC:.Rmd=.pdf)
 HTML=$(SRC:.Rmd=.html)
 TEX=$(SRC:.Rmd=.tex)
 DOCX=$(SRC:.md=.docx)
+## PPTX=$(SRC:.md=.pptx)  ## need to add PPTX for the Makefile
 
 all:	$(MD) $(PDFS) $(HTML) $(TEX) $(DOCX)
 
@@ -58,6 +59,7 @@ docx:	clean $(DOCX)
 %.pdf:	%.md
 	pandoc -r markdown+simple_tables+table_captions+yaml_metadata_block -w latex -s -S --latex-engine=pdflatex --template=$(PREFIX)/templates/latex.template --filter pandoc-crossref --filter pandoc-citeproc --csl=$(PREFIX)/csl/ajps.csl --bibliography=$(BIB) --filter pandoc-citeproc-preamble -o $@ $<
 
+## this needs update to use pandoc-crossref, and update my templates or use the original authors and also need to add --template= to te path
 %.docx:	%.md
 	pandoc -r markdown+simple_tables+table_captions+yaml_metadata_block -s -S --filter pandoc-crossref --filter pandoc-citeproc --csl=$(PREFIX)/csl/$(CSL).csl --bibliography=$(BIB) -o $@ $<
 
